@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		220BAD072040E49000EA266A /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220BAD062040E49000EA266A /* CustomCell.swift */; };
 		2229AF9A203E27BA007839F8 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2229AF99203E27BA007839F8 /* MainView.swift */; };
 		2229AF9C203E4E34007839F8 /* BottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2229AF9B203E4E34007839F8 /* BottomView.swift */; };
 		225EB0E720403BC800CDE32B /* img_0.png in Resources */ = {isa = PBXBuildFile; fileRef = 225EB0E620403BC800CDE32B /* img_0.png */; };
 		225EB0ED20403FC300CDE32B /* final3.json in Resources */ = {isa = PBXBuildFile; fileRef = 225EB0EC20403FC300CDE32B /* final3.json */; };
+		229C2F6B2046A6C200DC8416 /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229C2F6A2046A6C200DC8416 /* CustomCell.swift */; };
 		22DC7490203D1ACA002D7820 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DC748F203D1ACA002D7820 /* AppDelegate.swift */; };
 		22DC7492203D1ACA002D7820 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DC7491203D1ACA002D7820 /* ViewController.swift */; };
 		22DC7495203D1ACA002D7820 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22DC7493203D1ACA002D7820 /* Main.storyboard */; };
@@ -21,11 +21,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		220BAD062040E49000EA266A /* CustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
 		2229AF99203E27BA007839F8 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		2229AF9B203E4E34007839F8 /* BottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomView.swift; sourceTree = "<group>"; };
 		225EB0E620403BC800CDE32B /* img_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_0.png; sourceTree = "<group>"; };
 		225EB0EC20403FC300CDE32B /* final3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = final3.json; sourceTree = "<group>"; };
+		229C2F6A2046A6C200DC8416 /* CustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
 		22DC748C203D1ACA002D7820 /* planTomorrow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = planTomorrow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		22DC748F203D1ACA002D7820 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		22DC7491203D1ACA002D7820 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -85,7 +85,7 @@
 				2229AF99203E27BA007839F8 /* MainView.swift */,
 				2229AF9B203E4E34007839F8 /* BottomView.swift */,
 				22DC7493203D1ACA002D7820 /* Main.storyboard */,
-				220BAD062040E49000EA266A /* CustomCell.swift */,
+				229C2F6A2046A6C200DC8416 /* CustomCell.swift */,
 				22DC7499203D1ACA002D7820 /* Assets.xcassets */,
 				22DC749E203D1ACA002D7820 /* Info.plist */,
 				22DC7496203D1ACA002D7820 /* planTomorrow.xcdatamodeld */,
@@ -209,11 +209,13 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-planTomorrow/Pods-planTomorrow-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/JTAppleCalendar/JTAppleCalendar.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JTAppleCalendar.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -247,7 +249,7 @@
 				2229AF9A203E27BA007839F8 /* MainView.swift in Sources */,
 				22DC7498203D1ACA002D7820 /* planTomorrow.xcdatamodeld in Sources */,
 				22DC7490203D1ACA002D7820 /* AppDelegate.swift in Sources */,
-				220BAD072040E49000EA266A /* CustomCell.swift in Sources */,
+				229C2F6B2046A6C200DC8416 /* CustomCell.swift in Sources */,
 				2229AF9C203E4E34007839F8 /* BottomView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

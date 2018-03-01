@@ -6,8 +6,8 @@ target 'planTomorrow' do
   use_frameworks!
 
     pod 'JTAppleCalendar', '~> 7.0'
-
-   pod 'lottie-ios'
+    pod 'SnapKit', '~> 4.0.0'
+    pod 'lottie-ios'
   # Pods for planTomorrow
 
 end

@@ -10,154 +10,11 @@ import UIKit
 import Lottie
 import JTAppleCalendar
 import AudioToolbox
-extension ViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDataSource{
-    
-    func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters {
-        formatter.dateFormat = "yyyyMMdd"
-        formatter.timeZone = Calendar.current.timeZone
-        formatter.locale = Calendar.current.locale
-        let startDate = formatter.date(from: "2018 01 01")!
-        let endDate = formatter.date(from: "2018 12 31")!
-        let parameters = ConfigurationParameters(startDate: startDate, endDate: endDate,numberOfRows: 6,generateInDates: .forAllMonths , generateOutDates: .off )
-        return parameters
-    }
+import SnapKit
 
-    func calendar(_ calendar: JTAppleCalendarView, willDisplay cell: JTAppleCell, forItemAt date: Date, cellState: CellState, indexPath: IndexPath) {
-        // This function should have the same code as the cellForItemAt function
-        let mycell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: "CustomCell", for: indexPath) as! CustomCell
-        mycell.dataLabel.text = cellState.text
-        mycell.selectedView.layer.borderWidth = 1
-        mycell.selectedView.layer.borderColor = UIColor.white.cgColor
-        mycell.coverView.backgroundColor = UIColor.white
-        var tmp_value = 0.0
-        
-        if tmp[cellState.date] != nil {
-            tmp_value = tmp[cellState.date]!
-        }
-        
-        mycell.selectedView.backgroundColor = UIColor.clear
-        mycell.dataLabel.textColor = UIColor.black
-        mycell.coverView.isHidden = false
-        mycell.selectedView.clipsToBounds = true
-        UIView.animate(withDuration: 1.5,
-                       delay: 0.2,
-                       usingSpringWithDamping: 0.7,
-                       initialSpringVelocity: 0, options: [.allowUserInteraction],
-                       animations: {mycell.coverView.transform = CGAffineTransform(translationX: 0, y: CGFloat(40 * (1 - tmp_value)))},
-                       completion: nil)
-        mycell.selectedView.layer.borderWidth = 1
-        mycell.selectedView.layer.borderColor = UIColor.white.cgColor
-        mycell.selectedView.isHidden = false
-        if tmp_value < 0.3 {
-            mycell.dataLabel.textColor = UIColor.white
-        }else{
-            mycell.dataLabel.textColor = UIColor.black
-        }
-    }
-    
-
-    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
-        
-        let date = visibleDates.monthDates.first!.date
-        formatter.dateFormat = "MMMM"
-        self.monthLabel.text = formatter.string(from: date)
-        
-    }
-    
-
-    //显示单个cell
-    func calendar(_ calendar: JTAppleCalendarView, cellForItemAt date: Date, cellState: CellState, indexPath: IndexPath) -> JTAppleCell {
-        let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: "CustomCell", for: indexPath) as! CustomCell
-        
-        cell.dataLabel.text = cellState.text
-        cell.selectedView.layer.borderWidth = 1
-        cell.selectedView.layer.borderColor = UIColor.white.cgColor
-        cell.coverView.backgroundColor = UIColor.white
-        var tmp_value = 0.0
-        if tmp[cellState.date] != nil {
-            tmp_value = tmp[cellState.date]!
-        }
-            cell.selectedView.backgroundColor = UIColor.clear
-            cell.dataLabel.textColor = UIColor.black
-            cell.coverView.isHidden = false
-            cell.selectedView.clipsToBounds = true
-            UIView.animate(withDuration: 1.5,
-                           delay: 0.2,
-                           usingSpringWithDamping: 0.7,
-                           initialSpringVelocity: 0, options: [],
-                           animations: {cell.coverView.transform = CGAffineTransform(translationX: 0, y: CGFloat(40 * (1 - tmp_value)))},
-                           completion: nil)
-            cell.selectedView.layer.borderWidth = 1
-            cell.selectedView.layer.borderColor = UIColor.white.cgColor
-            cell.selectedView.isHidden = false
-        if tmp_value < 0.3 {
-            cell.dataLabel.textColor = UIColor.white
-        }else{
-            cell.dataLabel.textColor = UIColor.black
-        }
-        return cell
-    }
-    
-    
-    func handleSelection(cell: JTAppleCell?, cellState: CellState) {
-        let myCustomCell = cell as! CustomCell
-        myCustomCell.clipsToBounds = false
-        calendarView.clipsToBounds = true
-        
-        if let tmp_value = self.tmp[cellState.date]{
-            if myCustomCell.isSelected {
-                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.allowUserInteraction], animations: {
-                    myCustomCell.coverView.backgroundColor = UIColor.black
-                    myCustomCell.selectedView.layer.borderColor = UIColor.black.cgColor
-                    myCustomCell.selectedView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-                    myCustomCell.coverView.center.y -= CGFloat( 40 * (1 - tmp_value) * 0.5)
-                    myCustomCell.dataLabel.textColor = UIColor.white
-                }, completion:nil)
-            }else{
-                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.allowUserInteraction], animations: {
-                    myCustomCell.coverView.backgroundColor = UIColor.white
-                    myCustomCell.selectedView.layer.borderColor = UIColor.white.cgColor
-                    myCustomCell.selectedView.transform = CGAffineTransform(scaleX: 1, y: 1)
-                    myCustomCell.coverView.center.y += CGFloat( 40 * (1 - tmp_value) * 0.5)
-                    myCustomCell.dataLabel.textColor = UIColor.black
-                }, completion: nil)
-            }
-        }else{
-            if myCustomCell.isSelected {
-                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.allowUserInteraction], animations: {
-                    myCustomCell.selectedView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-                    myCustomCell.dataLabel.textColor = UIColor.black
-                    myCustomCell.selectedView.layer.borderColor = UIColor.black.cgColor
-                }, completion: nil)
-            }else{
-                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.allowUserInteraction], animations: {
-                    myCustomCell.selectedView.transform = CGAffineTransform(scaleX: 1, y: 1)
-                    myCustomCell.dataLabel.textColor = UIColor.white
-                    myCustomCell.selectedView.layer.borderColor = UIColor.white.cgColor
-                }, completion: nil)
-            }
-        }
-    }
-    
-    func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
-        if (nowSelected != date && cell != nil) {
-            handleSelection(cell: cell, cellState: cellState)
-            SM_ReceiveEvent(.ClickCalendarView)
-            nowSelected = date
-//            showDetail(date: date)
-        }
-    }
-    
-    func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
-        if (cell != nil ){
-            handleSelection(cell: cell, cellState: cellState)
-        }
-    }
-}
 //MARK: 颜色
 public let myColorYellow = UIColor.init(colorWithHexValue: 0xEDCDBD)
 public let myColorRed = UIColor.init(colorWithHexValue: 0xE03636)
-
 
 enum Mode:Int {
     case NONE
@@ -182,32 +39,38 @@ enum Event:Int {
     case SwipeLeftFurtherDetailView
 }
 
-class ViewController: UIViewController {
+class ViewController: UIViewController,JTAppleCalendarViewDelegate,JTAppleCalendarViewDataSource{
     //MARK: 属性
     var longPressDate = Date()
-    @IBOutlet weak var monthLabel: UILabel!
-    @IBOutlet weak var calendarView: JTAppleCalendarView!
-    
     var nowSelected = Date()
     let formatter = DateFormatter()
+    var startDate = Date()
+    var endDate = Date()
+
+    var dataLabel = UILabel()
+
+    @IBOutlet weak var calendarView: JTAppleCalendarView!
+    //一些尺寸
+    let mainViewLeft = UIScreen.main.bounds.width / 375 * 19.04
+    let mainViewTop = (UIScreen.main.bounds.height / 667 * 1.2) * 57.19
+    let initButtonSize = UIScreen.main.bounds.width * 0.12
+    
     
     //各个View
     let SCREEN_WIDTH = UIScreen.main.bounds.width
     let SCREEN_HEIGHT = UIScreen.main.bounds.height
-    let rightButton = UIButton(frame: CGRect(x: UIScreen.main.bounds.width - 60, y: 75 - 160 , width: 40, height: 40))
-    let leftButton = UIButton(frame: CGRect(x: 20 , y: 75 - 160, width: 40, height: 40))
-    let mainView = MainView(frame: CGRect(origin: CGPoint(x:0 - UIScreen.main.bounds.width  ,y: 50), size: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.7)))
+    let rightButton = UIButton()
+    let leftButton = UIButton()
+    let mainView = MainView()
+    
+    
     let showDetailView = MainView(frame: CGRect(origin: CGPoint(x:0 ,y: 50 + UIScreen.main.bounds.height  ), size: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.7)))
     
     var preMode = Mode.NONE
     var currentMode = Mode.Main
     var bottomView = LOTAnimationView()
-    
     var tmp:Dictionary<Date,Double> = [:]
     
-    @IBOutlet var weekLabelS: [UILabel]!
-    
-    @IBOutlet weak var weekLabelStack: UIStackView!
     //MARK: Debug
     var debugLabel = UILabel(frame: CGRect(x: 80 , y: 75 , width: 200, height: 40))
     func initDeBugMode(){
@@ -225,7 +88,7 @@ class ViewController: UIViewController {
         case .began:
             startGenerator.impactOccurred()
             print("开始")
-            print(cellState!.date)
+//            print(cellState!.date)
         case .cancelled:
             print("cancelled")
         case .ended:
@@ -243,16 +106,23 @@ class ViewController: UIViewController {
     //MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.timeZone = TimeZone.current
+        formatter.locale = Locale.current
+        startDate = formatter.date(from: "2018-01-01")!
+
+        endDate = formatter.date(from: "2018-12-31")!
+
         //初始化view
         initViewState()
         //debug模式
         initDeBugMode()
         //添加测试数据
         addTestData()
-        
+        calendarView.calendarDelegate = self
+        calendarView.calendarDataSource = self
         let longPressGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressCalendarView(gesture:)))
         longPressGesture.minimumPressDuration = 0.5
-        
         calendarView.addGestureRecognizer(longPressGesture)
         
         UIView.animate(withDuration: 0.5, delay: 0.5,
@@ -269,15 +139,18 @@ class ViewController: UIViewController {
                         self.rightButton.center.y += 160.0
                         self.leftButton.center.y += 160.0
         }, completion: nil)
+        view.bringSubview(toFront: calendarView)
     }
     
     //MARK: TestData
     func addTestData(){
-        let startDate = self.formatter.date(from: "2018 01 01")!
-//        let lastDate = startDate.addingTimeInterval(24*60*60)
         for i in 1...50 {
             tmp[startDate.addingTimeInterval(24*60*60*Double.init(i))] = Double(arc4random_uniform(100)) / 100.0
         }
+        tmp[startDate.addingTimeInterval(24*60*60*Double.init(5))] = 1.0
+        tmp[startDate.addingTimeInterval(24*60*60*Double.init(14))] = 1.0
+        tmp[startDate.addingTimeInterval(24*60*60*Double.init(23))] = 1.0
+        tmp[startDate.addingTimeInterval(24*60*60*Double.init(9))] = 1.0
     }
     
     
@@ -293,29 +166,33 @@ class ViewController: UIViewController {
         //calendarView
         initCalendarView()
         //monthLabel
-        initMonthLabel()
+//        initMonthLabel()
         //weekLabel
-        initWeekLabels()
+//        initWeekLabels()
         //Button
         //leftButton
-        initleftButton()
+        initLeftButton()
         //rightButton
-        initrightButton()
+        initRightButton()
         
         //添加View
-        self.view.addSubview(mainView)
-        self.view.addSubview(bottomView)
-        self.view.bringSubview(toFront: calendarView)
-        self.view.bringSubview(toFront: monthLabel)
+//        self.view.bringSubview(toFront: calendarView)
+//        self.view.bringSubview(toFront: monthLabel)
         self.view.addSubview(showDetailView)
         self.view.addSubview(rightButton)
-        self.view.addSubview(leftButton)
+//        view.bringSubview(toFront: calendarView)
     }
     
 
     //MARK: - 创建View
     func initMainView(){
-        mainView.backgroundColor = UIColor.clear
+        self.view.addSubview(mainView)
+//        print(SCREEN_HEIGHT)
+//        mainView.transform = CGAffineTransform(scaleX: SCREEN_WIDTH/375, y: SCREEN_HEIGHT / 667)
+        mainView.snp.makeConstraints { (make) -> Void in
+          make.edges.equalTo(view).inset(UIEdgeInsetsMake(SCREEN_WIDTH * 0.05, 0, 0, 0))
+        }
+
         mainView.backgroundColor = UIColor.clear
         mainView.layer.shadowOffset = CGSize(width: 10, height: 10)
         mainView.layer.shadowColor = UIColor.gray.cgColor
@@ -325,10 +202,25 @@ class ViewController: UIViewController {
     }
     
     func initbottomView(){
+        
+
         let path = Bundle.main.path(forResource: "final3", ofType: "json")
         bottomView = LOTAnimationView(filePath: path!)
+
+        self.view.addSubview(bottomView)
+//        bottomView.frame = CGRect(origin: CGPoint(x: 10.4 - self.view.bounds.width ,y: 224.5 + 50), size: CGSize(width: 352.5, height: 350))
+
+        bottomView.snp.makeConstraints { (make) -> Void in
+            make.left.equalTo(self.mainView.snp.left).offset(mainViewLeft - SCREEN_WIDTH * 0.024)
+            make.right.equalTo(self.mainView.snp.right).offset(-mainViewLeft + SCREEN_WIDTH * 0.02)
+            make.top.equalTo(self.mainView.snp.centerY).offset(-SCREEN_HEIGHT * 0.10)
+            make.height.equalTo(SCREEN_HEIGHT * 0.62)
+//            make.height.equalTo(self.mainView.snp.top).priority(.medium)
+        }
+        
+        bottomView.layoutIfNeeded()
+
         bottomView.animationSpeed = 1.3
-        bottomView.frame = CGRect(origin: CGPoint(x: 10.4 - self.view.bounds.width ,y: 224.5 + 50), size: CGSize(width: 352.5, height: 350))
         bottomView.backgroundColor = UIColor.clear
         bottomView.layer.shadowColor = UIColor.gray.cgColor
         bottomView.layer.shadowOffset = CGSize(width: 10, height: 10)
@@ -361,6 +253,7 @@ class ViewController: UIViewController {
     }
     
     func initCalendarView(){
+        calendarView.scrollingMode = .stopAtEachCalendarFrame
         //样式上
         calendarView.isHidden = true
         calendarView.alpha = 0
@@ -370,20 +263,40 @@ class ViewController: UIViewController {
         //功能上
         calendarView.allowsMultipleSelection = false
         calendarView.isRangeSelectionUsed = true
-    }
-    
-    func initMonthLabel(){
-        self.monthLabel.center.y = self.leftButton.center.y + self.leftButton.frame.height - self.monthLabel.frame.height
-        monthLabel.textColor = myColorRed
-        monthLabel.isHidden = true
-        monthLabel.alpha = 0
-    }
-    
-    func initleftButton(){
-        //leftButton
+        calendarView.reloadData()
+//        设置约束
         
+        calendarView.snp.makeConstraints { (make) -> Void in
+            make.left.equalTo(self.mainView.snp.left).offset(mainViewLeft + 10 )
+            make.right.equalTo(self.mainView.snp.right).offset(-mainViewLeft - 10)
+            make.top.equalTo(self.mainView.snp.top).offset((SCREEN_HEIGHT /
+                667) * 1.2 * 120)
+            make.bottom.equalTo(self.mainView.snp.bottom).offset(-(SCREEN_HEIGHT /
+                667) * 1.2 * 100)
+//            make.height.equalTo(self.mainView.snp.height).offset( -self.mainView.frame.height * 0.8)
+        }
+
+    }
+    
+//    func initMonthLabel(){
+//        self.monthLabel.center.y = 500//self.leftButton.center.y
+//        monthLabel.textColor = myColorRed
+//        monthLabel.isHidden = true
+//        monthLabel.alpha = 0
+//    }
+    
+    func initLeftButton(){
+        //leftButton
+        self.view.addSubview(leftButton)
+        leftButton.snp.makeConstraints { (make) -> Void in
+            make.size.equalTo(CGSize(width: initButtonSize, height: initButtonSize))
+            make.left.equalTo(self.mainView.snp.left).offset(mainViewLeft)
+            make.top.equalTo(view).offset(SCREEN_WIDTH * 0.1)
+        }
+        
+        leftButton.layoutIfNeeded()
         leftButton.backgroundColor = myColorRed
-        leftButton.layer.cornerRadius = leftButton.frame.size.width / 2
+        leftButton.layer.cornerRadius = leftButton.frame.width / 2
         leftButton.clipsToBounds = true
         leftButton.addTarget(self, action: #selector(clickLeftButtonFunc), for: UIControlEvents.touchUpInside)
         //添加阴影 - 在圆角的情况下
@@ -397,7 +310,16 @@ class ViewController: UIViewController {
         leftButton.layer.backgroundColor =  leftButtonBackgroundCGColor
     }
 
-    func initrightButton(){
+    func initRightButton(){
+        
+        self.view.addSubview(rightButton)
+        rightButton.snp.makeConstraints { (make) -> Void in
+            make.size.equalTo(CGSize(width: initButtonSize, height: initButtonSize))
+            make.right.equalTo(self.mainView.snp.right).offset(-mainViewLeft)
+            make.top.equalTo(view).offset(SCREEN_WIDTH * 0.1)
+        }
+        rightButton.layoutIfNeeded()
+
         rightButton.backgroundColor = UIColor(red: 0.879, green: 0.212, blue: 0.213, alpha: 1.000)
         rightButton.layer.cornerRadius = rightButton.frame.size.width / 2
         rightButton.clipsToBounds = true
@@ -414,12 +336,12 @@ class ViewController: UIViewController {
         rightButton.addTarget(self, action: #selector(clickRightButtonFunc), for: UIControlEvents.touchUpInside)
     }
     
-    func initWeekLabels(){
-        for weekLabel in weekLabelS! {
-            weekLabel.textColor = UIColor.white
-        }
-    }
-    
+//    func initWeekLabels(){
+//        for weekLabel in weekLabelS! {
+//            weekLabel.textColor = UIColor.white
+//        }
+//    }
+//
     //MARK: - 动画
     //眨眼睛
     func blinkAnimation() {
@@ -590,7 +512,7 @@ class ViewController: UIViewController {
         self.bottomView.isHidden = false
         self.bottomView.alpha = 1
         UIView.animate(withDuration: 0.5, animations: {
-            self.monthLabel.alpha = 0
+//            self.monthLabel.alpha = 0
             self.calendarView.alpha = 0
         })
         UIView.animate(withDuration: 0.5, delay: 0,
@@ -602,7 +524,7 @@ class ViewController: UIViewController {
                         self.mainView.transform = CGAffineTransform(scaleX: 1, y: 1)
         }, completion:  {
             _ in
-            self.monthLabel.isHidden = true
+//            self.monthLabel.isHidden = true
             self.calendarView.isHidden = true
             self.leftButton.isEnabled = true
             self.rightButton.isEnabled = true
@@ -611,12 +533,12 @@ class ViewController: UIViewController {
     
     func SM_ShowToDetail(){
         showDetailView.isHidden = false
-        monthLabel.isHidden = true
-        calendarView.layer.removeAllAnimations()
+//        monthLabel.isHidden = true
+//        calendarView.layer.removeAllAnimations()
         //把mainview前置
         UIView.animate(withDuration: 0.8, delay: 0,usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: [],animations:{
             self.mainView.center.y -= self.SCREEN_HEIGHT * 0.35
-            self.calendarView.alpha = 0
+//            self.calendarView.alpha = 0
             self.mainView.alpha = 0.9
             self.mainView.transform = CGAffineTransform(scaleX: 1, y: 0.6)
             let scale = CGAffineTransform(scaleX: 1, y: 1.5)
@@ -627,28 +549,32 @@ class ViewController: UIViewController {
             self.rightButton.backgroundColor = myColorYellow
             
             
-            
             self.showDetailView.transform = translation
             self.showDetailView.center.y -= self.view.bounds.height
-        },completion:{_ in self.calendarView.isHidden = true})
+        },completion:nil
+            //{
+//            _ in self.calendarView.isHidden = true}
+            //}
+        )
     }
+        
     
     
     //在动画未完成时，响应手势
     func SM_DetailToShow(){
         //
-        self.calendarView.layer.removeAllAnimations()
-        self.calendarView.isHidden = false
-        self.view.bringSubview(toFront: self.calendarView)
+//        self.calendarView.layer.removeAllAnimations()
+//        self.calendarView.isHidden = false
+//        self.view.bringSubview(toFront: self.calendarView)
         
         UIView.animate(withDuration: 1.0, delay: 0,usingSpringWithDamping: 0.5, initialSpringVelocity: 0.0, options: [.allowUserInteraction],animations:{
             self.mainView.center.y += self.SCREEN_HEIGHT * 0.35
             
             //self.calendarView.reloadData()
-            self.calendarView.alpha = 1
+//            self.calendarView.alpha = 1
             
-            print(self.calendarView.center.y)
-            self.monthLabel.alpha = 1
+//            print(self.calendarView.center.y)
+//            self.monthLabel.alpha = 1
             self.mainView.alpha = 1
             self.leftButton.center.y -= 60
             self.rightButton.center.y -= 60
@@ -669,13 +595,14 @@ class ViewController: UIViewController {
         //动画完成前，禁用掉两个button
         //眨眼睛，按钮变颜色，日历出现，月份Label出现
         //bottomView从下滑走
-        self.view.bringSubview(toFront: self.weekLabelStack)
+//        self.view.bringSubview(toFront: self.weekLabelStack)
+        
         self.rightButton.isEnabled = false
         self.leftButton.isEnabled = false
-        blinkAnimation()
         self.calendarView.isHidden = false
-        self.monthLabel.isHidden = false
-        
+//        self.monthLabel.isHidden = false
+
+        blinkAnimation()
 
         UIView.animate(withDuration: 1.0, delay: 0.2,
                        usingSpringWithDamping: 1.0, initialSpringVelocity: 0.2, options: [.allowUserInteraction,.curveEaseInOut],
@@ -686,13 +613,12 @@ class ViewController: UIViewController {
                         //要累积形变的话，不能直接赋值，最后赋值
                         self.bottomView.alpha = 0
                         self.calendarView.reloadData() //日历数据刷新
-
                         let scale = CGAffineTransform(scaleX: 1, y: 1.3)
                         let translation = scale.translatedBy(x: 0, y: 40)
                         self.mainView.transform = translation
                         self.calendarView.alpha = 1
                         //日历
-                        self.monthLabel.alpha = 1
+//                        self.monthLabel.alpha = 1
                     }, completion: {
                         _ in
                         self.bottomView.isHidden = true
@@ -707,11 +633,10 @@ class ViewController: UIViewController {
         self.leftButton.isEnabled = false
         UIView.animate(withDuration: 0.6, animations:{self.rightButton.backgroundColor = myColorYellow}
         )
-        bottomView.play(fromProgress: 0.2, toProgress: 0.8, withCompletion: {
+        bottomView.play(fromProgress: 0.1, toProgress: 0.8, withCompletion: {
             _ in
             self.rightButton.isEnabled = true //恢复
             self.leftButton.isEnabled = true
-            
         })
 
     }
@@ -733,6 +658,141 @@ class ViewController: UIViewController {
         })
     }
 
+    func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters {
+        let parameters = ConfigurationParameters(startDate: startDate, endDate: endDate,numberOfRows: 1,generateInDates: .forAllMonths
+            , generateOutDates: .tillEndOfRow
+        )
+        return parameters
+    }
+    
+    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
+        let date = visibleDates.monthDates.first!.date
+        formatter.dateFormat = "MMMM"
+        //        self.monthLabel.text = formatter.string(from: date)
+    }
+    
+    
+    func calendar(_ calendar: JTAppleCalendarView, willDisplay cell: JTAppleCell, forItemAt date: Date, cellState: CellState, indexPath: IndexPath){
+        // This function should have the same code as the cellForItemAt function
+        let mycell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: "CustomCell", for: indexPath) as! CustomCell
+        showCell(cell: mycell,cellState: cellState)
+    }
+    
+
+    
+    //合并下面两个函数
+    func showCell(cell: CustomCell,cellState: CellState){
+        //设置约束
+        cell.layoutIfNeeded()
+        cell.selectedView.layer.cornerRadius = cell.selectedView.layer.bounds.size.width / 2
+        cell.dataLabel.text = cellState.text
+        cell.selectedView.layer.borderWidth = 1
+        cell.selectedView.layer.borderColor = UIColor.white.cgColor
+        cell.coverView.backgroundColor = UIColor.white
+        var tmp_value = 0.0
+        if tmp[cellState.date] != nil {
+            tmp_value = tmp[cellState.date]!
+        }
+        print(tmp_value)
+        cell.hatImageView.isHidden = true
+
+        let hatTransform_1 = CGAffineTransform(rotationAngle: CGFloat.pi * 0.15)
+        let hatTransform_2 = hatTransform_1.translatedBy(x: -3, y: -27.5)
+        let hatTransform_3 = hatTransform_2.scaledBy(x: 0.8, y: 0.8)
+        cell.hatImageView.transform = hatTransform_3
+        
+        cell.selectedView.backgroundColor = myColorRed
+        cell.dataLabel.textColor = UIColor.black
+        cell.coverView.isHidden = false
+        cell.selectedView.clipsToBounds = true
+        UIView.animate(withDuration: 1.5,
+                       delay: 0.2,
+                       usingSpringWithDamping: 0.7,
+                       initialSpringVelocity: 0, options: [],
+                       animations: {cell.coverView.transform = CGAffineTransform(translationX: 0, y: CGFloat(40 * (1 - tmp_value)))},
+                       completion: nil)
+        cell.selectedView.layer.borderWidth = 1
+        cell.selectedView.layer.borderColor = UIColor.white.cgColor
+        cell.selectedView.isHidden = false
+        if tmp_value >= 0.95{
+            UIView.animate(withDuration: 0.5, animations: {
+                cell.selectedView.layer.borderColor = UIColor.black.cgColor
+                cell.hatImageView.isHidden = false
+                cell.hatImageView.alpha = 1
+            })
+        }
+        if tmp_value < 0.3 {
+            UIView.animate(withDuration: 0.5, animations: {cell.dataLabel.textColor = UIColor.white})
+        }else{
+            UIView.animate(withDuration: 0.5, animations: {cell.dataLabel.textColor = UIColor.black})
+        }
+
+    }
+    
+    
+    //显示单个cell
+    func calendar(_ calendar: JTAppleCalendarView, cellForItemAt date: Date, cellState: CellState, indexPath: IndexPath) -> JTAppleCell {
+        
+        let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: "CustomCell", for: indexPath) as! CustomCell
+        showCell(cell: cell, cellState: cellState)
+        return cell
+    }
+    
+    
+    func handleSelection(cell: JTAppleCell?, cellState: CellState) {
+        let myCustomCell = cell as! CustomCell
+        myCustomCell.clipsToBounds = false
+        calendarView.clipsToBounds = true
+
+        if let tmp_value = self.tmp[cellState.date]{
+            if myCustomCell.isSelected {
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.allowUserInteraction], animations: {
+                    myCustomCell.coverView.backgroundColor = UIColor.black
+                    myCustomCell.selectedView.layer.borderColor = UIColor.black.cgColor
+                    myCustomCell.selectedView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+                    myCustomCell.coverView.center.y -= CGFloat( 40 * (1 - tmp_value) * 0.5)
+                    myCustomCell.dataLabel.textColor = UIColor.white
+                }, completion:nil)
+            }else{
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.allowUserInteraction], animations: {
+                    myCustomCell.coverView.backgroundColor = UIColor.white
+                    myCustomCell.selectedView.layer.borderColor = UIColor.white.cgColor
+                    myCustomCell.selectedView.transform = CGAffineTransform(scaleX: 1, y: 1)
+                    myCustomCell.coverView.center.y += CGFloat( 40 * (1 - tmp_value) * 0.5)
+                    myCustomCell.dataLabel.textColor = UIColor.black
+                }, completion: nil)
+            }
+        }else{
+            if myCustomCell.isSelected {
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.allowUserInteraction], animations: {
+                    myCustomCell.selectedView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+                    myCustomCell.dataLabel.textColor = UIColor.black
+                    myCustomCell.selectedView.layer.borderColor = UIColor.black.cgColor
+                }, completion: nil)
+            }else{
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: [.allowUserInteraction], animations: {
+                    myCustomCell.selectedView.transform = CGAffineTransform(scaleX: 1, y: 1)
+                    myCustomCell.dataLabel.textColor = UIColor.white
+                    myCustomCell.selectedView.layer.borderColor = UIColor.white.cgColor
+                }, completion: nil)
+            }
+        }
+    }
+    
+    func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
+        if (nowSelected != date && cell != nil) {
+            handleSelection(cell: cell, cellState: cellState)
+            SM_ReceiveEvent(.ClickCalendarView)
+            nowSelected = date
+        }
+    }
+    
+    func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
+        if (cell != nil ){
+            handleSelection(cell: cell, cellState: cellState)
+        }
+    }
+    
 }
 
 extension UIColor{
@@ -745,5 +805,4 @@ extension UIColor{
         )
     }
 }
-
 
